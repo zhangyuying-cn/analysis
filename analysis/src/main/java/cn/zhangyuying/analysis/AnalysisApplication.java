@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 包目录结构：
  * analysis 分析-饼图
  * history 历史数据归档
- * issue 待分析问题的处理(包括问题的增加更新和删除)
+ * record 待分析问题的处理(包括问题的增加更新和删除)
  * metadata 问题的元数据
  * import 导入导出文件
  * @author zyy

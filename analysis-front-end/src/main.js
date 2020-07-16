@@ -8,10 +8,10 @@ import echarts from 'echarts'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'bootstrap'
-import $ from 'jquery'
+// import $ from 'jquery'
 
 Vue.use(ElementUI)
-Vue.use($)
+// Vue.use($)
 
 Vue.prototype.$echarts = echarts
 

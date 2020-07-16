@@ -4,13 +4,31 @@
     <!-- 组织机构管理 -->
     <header>
       <div>
-        <div class="float-left ml-5">
-          <router-link  class="" to="/pie">
+        <div class="d-inline-block float-left ml-5">
+          <router-link  class="" to="/">
+            <!-- 模块链接 -->
+            <span class="">回到首页</span>
+          </router-link>
+        </div>
+        <div class="d-inline-block float-left ml-5">
+          <router-link  class="" to="/metadata">
+            <!-- 模块链接 -->
+            <span class="">元数据定义</span>
+          </router-link>
+        </div>
+        <div class="d-inline-block float-left ml-5">
+          <router-link  class="" to="/record">
+            <!-- 模块链接 -->
+            <span class="">记录维护</span>
+          </router-link>
+        </div>
+        <div class="d-inline-block float-left ml-5">
+          <router-link  class="" to="/chart">
             <!-- 模块链接 -->
             <span class="">统计图生成</span>
           </router-link>
         </div>
-        <div class="float-left ml-5">
+        <div class="d-inline-block ml-5">
           <router-link  class="" to="/import">
           <!-- 模块链接 -->
           <span class="">数据导入</span>

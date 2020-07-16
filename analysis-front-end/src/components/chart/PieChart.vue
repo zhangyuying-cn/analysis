@@ -3,14 +3,17 @@
 </template>
 
 <script>
-import * as service from '../../service/apiService'
+import * as service from '../../analysis/analysisService'
 export default {
   name: 'PieChart',
   data () {
     return {
       pieData: {
         nameData: [],
-        nameAndPercentageData: []
+        pieDataValue: [{
+          name: '',
+          value: ''
+        }]
       }
     }
   },
@@ -46,7 +49,7 @@ export default {
         })
         _this.preData = {
           nameData: name,
-          nameAndPercentageData: nameAndPercentage
+          pieDataValue: nameAndPercentage
         }
         this.getPie()
       })
@@ -96,7 +99,7 @@ export default {
             }
           },
           // 饼图数据
-          data: this.preData.nameAndPercentageData
+          data: this.preData.pieDataValue
         }
       }
       // 使用刚指定的配置项和数据显示图表。

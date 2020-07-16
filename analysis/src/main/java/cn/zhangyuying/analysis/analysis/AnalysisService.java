@@ -1,7 +1,10 @@
 package cn.zhangyuying.analysis.analysis;
 
-import cn.zhangyuying.analysis.dao.IssueDao;
-import cn.zhangyuying.analysis.issue.bean.Issue;
+import cn.zhangyuying.analysis.analysis.bean.AnalysisResult;
+import cn.zhangyuying.analysis.analysis.bean.BarAnalysisResult;
+import cn.zhangyuying.analysis.analysis.bean.BarData;
+import cn.zhangyuying.analysis.dao.RecordDao;
+import cn.zhangyuying.analysis.record.bean.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,35 +19,52 @@ import java.util.Map;
 @Service
 public class AnalysisService {
     @Autowired
-    private IssueDao issueDao;
+    private RecordDao recordDao;
 
-    List<AnalysisResult> analysisData(String analysisType) {
-        List<Issue> issues = issueDao.getAllIssue();
+    List<AnalysisResult> getPieAnalysisData(String analysisType) {
+        List<Record> records = recordDao.getAllRecord();
 
-        Map<String, List<Issue>> analysisType2IssueMap = getAnalysisType2IssueMap(analysisType, issues);
+        Map<String, List<Record>> analysisType2RecordMap = getAnalysisType2RecordMap(analysisType, records);
         List<AnalysisResult> analysisResults = new ArrayList<>();
-        for (Map.Entry<String, List<Issue>> issueEntry : analysisType2IssueMap.entrySet()) {
-            AnalysisResult analysisResult = AnalysisResult.buildAnalysisResult(issueEntry.getKey(), issueEntry.getValue().size(), issueEntry.getValue());
+        for (Map.Entry<String, List<Record>> recordEntry : analysisType2RecordMap.entrySet()) {
+            AnalysisResult analysisResult = AnalysisResult.analysisResultFactory(recordEntry.getKey(), recordEntry.getValue().size(), recordEntry.getValue());
             analysisResults.add(analysisResult);
         }
         return analysisResults;
     }
 
-    private Map<String, List<Issue>> getAnalysisType2IssueMap(String analysisType, List<Issue> issues) {
-        Map<String, List<Issue>> analysisType2IssueMap = new HashMap<>();
-        for (Issue issue : issues) {
-            Object mapKey = issue.getMetadata().get(analysisType);
+    private Map<String, List<Record>> getAnalysisType2RecordMap(String analysisType, List<Record> records) {
+        Map<String, List<Record>> analysisType2RecordMap = new HashMap<>();
+        for (Record record : records) {
+            Object mapKey = record.getRecordData().get(analysisType);
             if (mapKey == null) {
                 continue;
             }
-            List<Issue> issueList = analysisType2IssueMap.get(mapKey.toString());
-            if (issueList == null) {
-                issueList = new ArrayList<>();
+            List<Record> recordList = analysisType2RecordMap.get(mapKey.toString());
+            if (recordList == null) {
+                recordList = new ArrayList<>();
             }
-            issueList.add(issue);
-            analysisType2IssueMap.put(mapKey.toString(), issueList);
+            recordList.add(record);
+            analysisType2RecordMap.put(mapKey.toString(), recordList);
         }
-        return analysisType2IssueMap;
+        return analysisType2RecordMap;
+    }
+
+    List<BarAnalysisResult> getBarAnalysisData(String analysisType, String xAxis) {
+        List<Record> records = recordDao.getAllRecord();
+        Map<String, List<Record>> analysisType2RecordMap = getAnalysisType2RecordMap(analysisType, records);
+        List<BarAnalysisResult> barAnalysisResults = new ArrayList<>();
+        for (Map.Entry<String, List<Record>> recordEntry : analysisType2RecordMap.entrySet()) {
+            
+            Map<String, List<Record>> xAxis2RecordMap = getAnalysisType2RecordMap(xAxis, recordEntry.getValue());
+            List<BarData> barDatas = new ArrayList<>();
+            for (Map.Entry<String, List<Record>> xAxisEntry : xAxis2RecordMap.entrySet()) {
+                BarData barData = BarData.barDataFactory(xAxisEntry.getKey(), xAxisEntry.getValue().size(), xAxisEntry.getValue());
+                barDatas.add(barData);
+            }
+            barAnalysisResults.add(BarAnalysisResult.buildAnalysisResult(recordEntry.getKey(), barDatas));
+        }
+        return barAnalysisResults;
     }
 
 }

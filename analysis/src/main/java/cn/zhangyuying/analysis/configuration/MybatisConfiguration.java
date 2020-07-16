@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @MapperScan(basePackages = {
-    "cn.zhangyuying.analysis.dao.mapper"
+    "cn.zhangyuying.analysis"
 })
 public class MybatisConfiguration {
 }

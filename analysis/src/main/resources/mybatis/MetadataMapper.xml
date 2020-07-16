@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhangyuying.analysis.metadata.dao.mybatis.MetadataMapper">
+
+    <resultMap id="resultMap"
+               type="cn.zhangyuying.analysis.metadata.bean.Metadata">
+        <id property="id" column="id"/>
+        <result property="field" column="metadata"
+                javaType="cn.zhangyuying.analysis.metadata.bean.Field"
+                typeHandler="cn.zhangyuying.analysis.dao.handler.TextTypeHandler"/>
+        <result property="updateTime" column="updatetime"
+                javaType="java.util.Date"/>
+        <result property="currentUse" column="currentuser"
+                javaType="java.lang.Boolean"/>
+    </resultMap>
+
+    <select id="getAllMetadata" resultMap="resultMap">
+        SELECT
+        <include refid="baseField"/>
+        FROM
+        <include refid="table_record"/>
+        <if test="limit!=null and limit !='' ">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="selectMetadataById" resultMap="resultMap">
+        SELECT
+        <include refid="baseField"/>
+        FROM
+        <include refid="table_record"/>
+        WHERE id=#{id}
+    </select>
+
+    <insert id="insertMetadata"
+            parameterType="cn.zhangyuying.analysis.metadata.bean.Metadata">
+        INSERT INTO
+        <include refid="table_record"/>
+        (
+        <include refid="baseField"/>
+        )
+        VALUES
+        (#{metadata.id},
+        #{metadata.field,javaType=cn.zhangyuying.analysis.metadata.bean.Field,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+        #{metadata.updateTime},
+        #{metadata.currentUse})
+    </insert>
+    <insert id="insertMetadatas">
+        INSERT INTO
+        <include refid="table_record"/>
+        (
+        <include refid="baseField"/>
+        )
+        VALUES
+        <foreach collection="metadatas" item="metadata" index="index"
+                 separator=",">
+            (#{metadata.id},
+            #{metadata.field,javaType=cn.zhangyuying.analysis.metadata.bean.Field,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+            #{metadata.updateTime},
+            #{metadata.currentUse})
+        </foreach>
+    </insert>
+
+    <update id="updateMetadata">
+        UPDATE
+        <include refid="table_record"/>
+        SET
+        metadata =
+        #{metadata.field,javaType=cn.zhangyuying.analysis.metadata.bean.Field,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+        updatetime = #{metadata.updateTime},
+        currentuse = #{metadata.currentUse}
+        WHERE id = #{metadata.id}
+    </update>
+
+    <update id="deleteMetadata">
+        DELETE FROM
+        <include refid="table_record"/>
+        WHERE id = #{id}
+    </update>
+
+
+    <sql id="table_record">
+        db_analysis.t_metadata
+    </sql>
+    <sql id="baseField">
+        id, metadata, updatetime, currentuse
+    </sql>
+
+
+</mapper>

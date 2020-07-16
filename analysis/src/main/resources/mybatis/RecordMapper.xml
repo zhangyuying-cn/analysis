@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhangyuying.analysis.dao.mapper.RecordMapper">
+
+    <resultMap id="resultMap"
+               type="cn.zhangyuying.analysis.record.bean.Record">
+        <id property="id" column="id"/>
+        <result property="recordData" column="recorddata"
+                javaType="java.util.HashMap"
+                typeHandler="cn.zhangyuying.analysis.dao.handler.TextTypeHandler"/>
+        <result property="updateTime" column="updatetime"
+                javaType="java.util.Date"/>
+    </resultMap>
+
+    <select id="getAllRecord" resultMap="resultMap">
+        SELECT
+        <include refid="baseField"/>
+        FROM
+        <include refid="table_record"/>
+        <if test="limit!=null and limit !='' ">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="selectRecordById" resultMap="resultMap">
+        SELECT
+        <include refid="baseField"/>
+        FROM
+        <include refid="table_record"/>
+        WHERE id=#{id}
+    </select>
+
+    <insert id="insertRecord"
+            parameterType="cn.zhangyuying.analysis.record.bean.Record">
+        INSERT INTO
+        <include refid="table_record"/>
+        (
+        <include refid="baseField"/>
+        )
+        VALUES
+        (#{record.id},
+        #{record.recordData,javaType=java.util.HashMap,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+        #{records.updateTime})
+    </insert>
+    <insert id="insertRecords">
+        INSERT INTO
+        <include refid="table_record"/>
+        (
+        <include refid="baseField"/>
+        )
+        VALUES
+        <foreach collection="records" item="record" index="index" separator=",">
+            ( #{record.id},
+            #{record.recordData,javaType=java.util.HashMap,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+            #{record.updateTime} )
+        </foreach>
+    </insert>
+
+    <update id="updateRecord">
+        UPDATE
+        <include refid="table_record"/>
+        SET
+        recorddata
+        =#{record.recordData,javaType=java.util.HashMap,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+        updatetime= #{record.updateTime}
+        WHERE id = #{record.id}
+    </update>
+
+    <update id="updateRecords">
+        <foreach collection="records" separator=";" item="record">
+            UPDATE
+            <include refid="table_record"/>
+            SET
+            recorddata
+            =#{record.recordData,javaType=java.util.HashMap,typeHandler=cn.zhangyuying.analysis.dao.handler.TextTypeHandler },
+            updatetime= #{record.updateTime}
+            WHERE id = #{record.id}
+        </foreach>
+    </update>
+
+    <update id="deleteRecord">
+        DELETE FROM
+        <include refid="table_record"/>
+        WHERE id = #{id}
+    </update>
+
+
+    <sql id="table_record">
+        db_analysis.t_record
+    </sql>
+    <sql id="baseField">
+        id, recorddata, updatetime
+    </sql>
+
+
+</mapper>

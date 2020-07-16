@@ -1,4 +1,4 @@
-package cn.zhangyuying.analysis.issue.bean;
+package cn.zhangyuying.analysis.record.bean;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,8 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class Issue {
+public class Record {
     private String id;
-    private Map<String, Object> metadata = new HashMap<>();
+    private Map<String, Object> recordData = new HashMap<>();
     private Date updateTime;
 }

@@ -2,8 +2,8 @@ package cn.zhangyuying.analysis.imexport;
 
 import cn.zhangyuying.analysis.common.CommonConst;
 import cn.zhangyuying.analysis.common.CommonUtil;
-import cn.zhangyuying.analysis.dao.IssueDao;
-import cn.zhangyuying.analysis.issue.bean.Issue;
+import cn.zhangyuying.analysis.dao.RecordDao;
+import cn.zhangyuying.analysis.record.bean.Record;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -32,21 +32,21 @@ import java.util.Map;
 public class ImexportService {
     /** logger */
     private static Logger logger = LoggerFactory.getLogger(ImexportService.class);
-    private final IssueDao issueDao;
+    private final RecordDao recordDao;
 
-    public ImexportService(IssueDao issueDao) {
-        this.issueDao = issueDao;
+    public ImexportService(RecordDao recordDao) {
+        this.recordDao = recordDao;
     }
 
     void importExcelOrganData(MultipartFile excelFile) throws IOException {
-        // 从excel中获取数据，拼装成issues
-        List<Issue> issues = buildIssuesFromExcel(excelFile);
+        // 从excel中获取数据，拼装成records
+        List<Record> records = buildRecordsFromExcel(excelFile);
         // 入库
-        issueDao.insertIssues(issues);
+        recordDao.insertRecords(records);
     }
 
 
-    private List<Issue> buildIssuesFromExcel(MultipartFile excelFile) throws IOException{
+    private List<Record> buildRecordsFromExcel(MultipartFile excelFile) throws IOException{
         InputStream inputStream = excelFile.getInputStream();
         // 创建工作簿
         XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
@@ -58,7 +58,7 @@ public class ImexportService {
         if (rows <= 2) {
             return new ArrayList<>();
         }
-        List<Issue> corpList = new ArrayList<>();
+        List<Record> corpList = new ArrayList<>();
         Row titleRow = sheet.getRow(0);
         for (int i = 1; i <= rows; i++) {
             Row row = sheet.getRow(i);
@@ -74,11 +74,11 @@ public class ImexportService {
                     map.put(title, getCellValue(row.getCell(j)));
                 }
             }
-            Issue issue = new Issue();
-            issue.setId(CommonUtil.getUuid());
-            issue.setMetadata(map);
-            issue.setUpdateTime(new Date());
-            corpList.add(issue);
+            Record record = new Record();
+            record.setId(CommonUtil.getUuid());
+            record.setRecordData(map);
+            record.setUpdateTime(new Date());
+            corpList.add(record);
         }
         return corpList;
     }

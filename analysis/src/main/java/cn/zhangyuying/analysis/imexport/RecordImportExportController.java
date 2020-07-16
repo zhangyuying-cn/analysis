@@ -19,12 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class IssueImportExportController {
+public class RecordImportExportController {
     /** logger */
-    private static Logger logger = LoggerFactory.getLogger(IssueImportExportController.class);
+    private static Logger logger = LoggerFactory.getLogger(RecordImportExportController.class);
     private final ImexportService imexportService;
 
-    public IssueImportExportController(ImexportService imexportService) {
+    public RecordImportExportController(ImexportService imexportService) {
         this.imexportService = imexportService;
     }
 
