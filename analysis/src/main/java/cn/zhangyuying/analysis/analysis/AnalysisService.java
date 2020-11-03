@@ -55,8 +55,26 @@ public class AnalysisService {
         Map<String, List<Record>> analysisType2RecordMap = getAnalysisType2RecordMap(analysisType, records);
         List<BarAnalysisResult> barAnalysisResults = new ArrayList<>();
         for (Map.Entry<String, List<Record>> recordEntry : analysisType2RecordMap.entrySet()) {
-            
+
             Map<String, List<Record>> xAxis2RecordMap = getAnalysisType2RecordMap(xAxis, recordEntry.getValue());
+            List<BarData> barDatas = new ArrayList<>();
+            for (Map.Entry<String, List<Record>> xAxisEntry : xAxis2RecordMap.entrySet()) {
+                BarData barData = BarData.barDataFactory(xAxisEntry.getKey(), xAxisEntry.getValue().size(), xAxisEntry.getValue());
+                barDatas.add(barData);
+            }
+            barAnalysisResults.add(BarAnalysisResult.buildAnalysisResult(recordEntry.getKey(), barDatas));
+        }
+        return barAnalysisResults;
+    }
+
+    //横轴是时间
+    List<BarAnalysisResult> getLineAnalysisData(String analysisType,String timeXAxis) {
+        List<Record> records = recordDao.getAllRecord();
+        Map<String, List<Record>> analysisType2RecordMap = getAnalysisType2RecordMap(analysisType, records);
+        List<BarAnalysisResult> barAnalysisResults = new ArrayList<>();
+        for (Map.Entry<String, List<Record>> recordEntry : analysisType2RecordMap.entrySet()) {
+
+            Map<String, List<Record>> xAxis2RecordMap = getAnalysisType2RecordMap(timeXAxis, recordEntry.getValue());
             List<BarData> barDatas = new ArrayList<>();
             for (Map.Entry<String, List<Record>> xAxisEntry : xAxis2RecordMap.entrySet()) {
                 BarData barData = BarData.barDataFactory(xAxisEntry.getKey(), xAxisEntry.getValue().size(), xAxisEntry.getValue());

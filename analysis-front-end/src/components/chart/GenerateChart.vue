@@ -9,10 +9,9 @@
     <el-button type="primary"
                @click="generateLine">生成线性图</el-button>
     <!--<router-view/>-->
-    <!--<pie-chart-->
-      <!--v-show="chartShow===pie"-->
-      <!--:analysisType="analysisType">-->
-    <!--</pie-chart>-->
+    <pie-chart
+      :analysisType="analysisType">
+    </pie-chart>
     <bar-chart
       :analysisType="analysisType"
       :xAxis="xAxis"
